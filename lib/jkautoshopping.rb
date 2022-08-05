@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "jkautoshopping/version"
+require_relative 'jkautoshopping/version'
 require 'f1sales_custom/parser'
 require 'f1sales_custom/source'
 require 'f1sales_custom/hooks'
@@ -26,22 +26,42 @@ module Jkautoshopping
       source = F1SalesCustom::Email::Source.all[0]
 
       {
-        source: {
-          name: source[:name]
-        },
-        customer: {
-          name: parsed_email['nome'],
-          phone: parsed_email['telefone'],
-          email: parsed_email['email'],
-          cpf: parsed_email['n_do_cpf']
-        },
-        product: {
-          link: parsed_email['page_url'],
-          name: ''
-        },
-        message: parsed_email['mensagem'],
-        description: "Loja: #{parsed_email['selecione_uma_loja'].split("\n").first}"
+        source: source_name(source),
+        customer: customer(parsed_email),
+        product: product(parsed_email),
+        message: message(parsed_email),
+        description: description(parsed_email)
       }
+    end
+
+    def source_name(source)
+      {
+        name: source[:name]
+      }
+    end
+
+    def customer(parsed_email)
+      {
+        name: parsed_email['nome'],
+        phone: parsed_email['telefone'],
+        email: parsed_email['email'],
+        cpf: parsed_email['n_do_cpf']
+      }
+    end
+
+    def product(parsed_email)
+      {
+        link: parsed_email['page_url'],
+        name: ''
+      }
+    end
+
+    def message(parsed_email)
+      parsed_email['mensagem']
+    end
+
+    def description(parsed_email)
+      "Loja: #{parsed_email['selecione_uma_loja'].split("\n").first}"
     end
   end
 
@@ -49,11 +69,7 @@ module Jkautoshopping
     def self.switch_source(lead)
       source_name = lead.source.name
       description = lead.description
-      if description
-        "#{source_name} - #{description.split(':').last.strip}"
-      else
-        source_name
-      end
+      description ? "#{source_name} - #{description.split(':').last.strip}" : source_name
     end
   end
 end
