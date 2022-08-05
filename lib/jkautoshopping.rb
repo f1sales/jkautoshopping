@@ -44,4 +44,10 @@ module Jkautoshopping
       }
     end
   end
+
+  class F1SalesCustom::Hooks::Lead
+    def self.switch_source(lead)
+      source_name = lead.source.name
+    end
+  end
 end
