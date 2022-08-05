@@ -28,8 +28,8 @@ RSpec.describe F1SalesCustom::Hooks::Lead do
 
     context 'when lead come with SIGA in description' do
       before {lead.description = 'Loja: SIGA'}
-      it 'return source Website - SHARK' do
-        expect(switch_source).to eq('Website - SHARK')
+      it 'return source Website - SIGA' do
+        expect(switch_source).to eq('Website - SIGA')
       end
     end
   end

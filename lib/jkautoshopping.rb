@@ -48,6 +48,12 @@ module Jkautoshopping
   class F1SalesCustom::Hooks::Lead
     def self.switch_source(lead)
       source_name = lead.source.name
+      description = lead.description
+      if description
+        "#{source_name} - #{description.split(':').last.strip}"
+      else
+        source_name
+      end
     end
   end
 end
