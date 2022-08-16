@@ -69,7 +69,8 @@ module Jkautoshopping
     def self.switch_source(lead)
       source_name = lead.source.name
       description = lead.description
-      description ? "#{source_name} - #{description.split(':').last.strip}" : source_name
+      source_name += " - #{description.split(':').last.strip}" unless description.empty?
+      source_name
     end
   end
 end
