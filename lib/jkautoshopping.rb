@@ -66,11 +66,20 @@ module Jkautoshopping
   end
 
   class F1SalesCustom::Hooks::Lead
-    def self.switch_source(lead)
-      source_name = lead.source.name
-      description = lead.description
-      source_name += " - #{description.split(':').last.strip}" unless description.empty?
-      source_name
+    class << self
+      def switch_source(lead)
+        @lead = lead
+        source_name = lead.source.name
+        return source_name += facebook_source_name if source_name.downcase['facebook']
+
+        description = lead.description
+        source_name += " - #{description.split(':').last.strip}" unless description&.empty?
+        source_name
+      end
+
+      def facebook_source_name
+        @lead.product.name.split('|').last
+      end
     end
   end
 end
